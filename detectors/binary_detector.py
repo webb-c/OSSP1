@@ -36,7 +36,7 @@ class ResNetforOSP:
         self.epochs             = epochs
         self.iterations         = 18000 // self.batch_size
         self.weight_decay       = 0.0001
-        self.log_filepath       = r'C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/detectors/binary/log'
+        self.log_filepath       = 'C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/detectors/binary/log'
 
         if load_weights:
             try:
