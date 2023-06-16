@@ -9,6 +9,9 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
 import pandas as pd
+import copy
+import time
+import datetime
 from keras.datasets import cifar10
 
 sys.path.append('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras')
@@ -22,36 +25,68 @@ import detectors.OPA2D_detector as opa2d
 from detectors.binary_detector import ResNetforOSP
 from networks.resnet import ResNet
 
+tf.get_logger().setLevel(tf.compat.v1.logging.ERROR)
+
 random.seed(42)
 resnet = ResNet()
-detect = ResNetforOSP()
-
-### cuda setting
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
-gpus = tf.config.experimental.list_physical_devices('GPU')
-if gpus:
-    # Currently, memory growth needs to be the same across GPUs
-    for gpu in gpus:
-        tf.config.experimental.set_memory_growth(gpu, True)
-    logical_gpus = tf.config.experimental.list_logical_devices('GPU')
-    print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPUs")
-tf.test.is_gpu_available()
+binary= ResNetforOSP()
 
 ### get data
-_, (x_test, y_test) = cifar10.load_data()
-length = len(x_test)
+def get_data():
+    _, (x_test, y_test) = cifar10.load_data()
+    return (x_test, y_test)
 
-### accuracy
-def get_accuracy(detect_method=denoising) :
-    n = 0
-    for i in tqdm(range(length)) :
+### performance
+def get_performance(detect_method=binary) :
+    data = 0
+    correct = 0
+    total_time = 0
+    x_test, y_test = get_data()
+    # print(y_test[:15]) # [0, 1, 2, 3, 4 ,... , 9]
+    # length = len(x_test)
+    for i in tqdm(range(100)) :
         x = x_test[i]
-        y = y_test[i]
-    
-        print(y)
+        y = y_test[i][0]
+        # origin
+        start_time = time.time()
         ret = detect_method.is_attack(x)
-        #if not ret :
-        #    n += 1
-        #    pred = resnet.predict(x)[0]
-        
-        #attack_x = opa2d.reattack()
+        end_time = time.time()
+        total_time += (end_time - start_time)
+        pred = np.argmax(resnet.predict(x)[0])
+        if not ret :
+            data += 1
+            if pred == y : correct += 1
+        # attack
+        copy_x = copy.deepcopy(x)
+        attack_x = opa2d.reattack(copy_x, pred, resnet, maxiter=50, verbose=False)[-2]
+        start_time = time.time()
+        attack_ret = detect_method.is_attack(attack_x)
+        end_time = time.time()
+        total_time += (end_time - start_time)
+        if not attack_ret :
+            data += 1
+            attack_pred = np.argmax(resnet.predict(x)[0])
+            if attack_pred == y : correct += 1
+    
+    accuracy = 100*(correct / data)
+    return (data, accuracy, total_time)
+
+### test
+data, accuracy, total_time = get_performance()
+print("==== Accuracy ====")
+#print("Denosing : " + str(accuracy))
+#print("Pca      : " + str(accuracy))
+print("Binary   : " + str(accuracy))
+#print("OPA2D    : " + str(accuracy))
+
+print("==== # of data ====")
+#print("Denosing : " + str(data))
+#print("Pca      : " + str(data))
+print("Binary   : " + str(data))
+#print("OPA2D    : " + str(data))
+
+print("==== total time for decide attack or not ====")
+#print("Denosing : " + str(total_time))
+#print("Pca      : " + str(total_time))
+print("Binary   : " + str(total_time))
+#print("OPA2D    : " + str(total_time))

@@ -56,14 +56,14 @@ def get_value(img) :
     return result
 
 # 테스트
-origin_img = cv2.imread('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/resnet_sample/original/19_frog.png', cv2.IMREAD_COLOR)
-attack_img = cv2.imread('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/resnet_sample/attack/19_frog.png', cv2.IMREAD_COLOR)
-origin = np.array(origin_img)
-attack = np.array(attack_img)
+# origin_img = cv2.imread('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/resnet_sample/original/19_frog.png', cv2.IMREAD_COLOR)
+# attack_img = cv2.imread('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/resnet_sample/attack/19_frog.png', cv2.IMREAD_COLOR)
+# origin = np.array(origin_img)
+# attack = np.array(attack_img)
 
-decoded = pca_encode_decode(origin)
-o_result = calculate_difference(origin, decoded)
-decoded = pca_encode_decode(attack)
-a_result = calculate_difference(attack, decoded)
+# decoded = pca_encode_decode(origin)
+# o_result = calculate_difference(origin, decoded)
+# decoded = pca_encode_decode(attack)
+# a_result = calculate_difference(attack, decoded)
 
-print("original:", o_result, "attack:", a_result)
+# print("original:", o_result, "attack:", a_result)

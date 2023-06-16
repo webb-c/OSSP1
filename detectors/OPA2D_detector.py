@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 from keras.datasets import cifar10
 import sys
+import tensorflow as tf
 import copy
 sys.path.append('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras')
 import helper
@@ -13,6 +14,8 @@ from networks.resnet import ResNet
 from networks.lenet import LeNet
 from differential_evolution import differential_evolution
 resnet = ResNet()
+
+tf.get_logger().setLevel(tf.compat.v1.logging.ERROR)
 
 '''
 1. attack , origin image 가져오기 

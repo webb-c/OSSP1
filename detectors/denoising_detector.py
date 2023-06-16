@@ -29,8 +29,6 @@ def is_attack(image, threshold = 0.5) :
     
 def get_value(image) :
     decoded_image = __denoising(image)
-    #helper.plot_image(decoded_image)
-
     diff_sum = __calculate_difference(image, decoded_image)
     return diff_sum
 

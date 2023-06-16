@@ -175,10 +175,10 @@ class ResNet:
 
     def predict(self, img):
         processed = self.color_process(img)
-        return self._model.predict(processed, batch_size=self.batch_size)
+        return self._model.predict(processed, batch_size=self.batch_size, verbose=0)
     
     def predict_one(self, img):
-        return self.predict(img)[0]
+        return self.predict(img, verbose=0)[0]
 
     def accuracy(self):
         (x_train, y_train), (x_test, y_test) = cifar10.load_data()
