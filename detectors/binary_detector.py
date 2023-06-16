@@ -322,18 +322,17 @@ class ResNetforOSP:
         
         return (x_train, y_train), (x_test, y_test)
     
-def is_attack(img):
-    conf = model.predict(img)
-    predict = np.argmax(conf)
-    if predict == 0 : return True
-    else : return False
-
-model = ResNetforOSP()
+    def is_attack(self, img):
+        conf = self.predict(img)
+        predict = np.argmax(conf)
+        if predict == 0 : return True
+        else : return False
 
 # testing용 코드
-test_img = cv2.imread('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/resnet_sample/original/1037_automobile.png', cv2.IMREAD_COLOR)
-test_img = cv2.cvtColor(test_img, cv2.COLOR_BGR2RGB)
-print(is_attack(test_img))
+# model = ResNetforOSP()
+# test_img = cv2.imread('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/resnet_sample/original/1037_automobile.png', cv2.IMREAD_COLOR)
+# test_img = cv2.cvtColor(test_img, cv2.COLOR_BGR2RGB)
+# print(model.is_attack(test_img))
 
 # predict_origin = model.predict(np.array(origin_img))[0]
 # predict_attack = model.predict(np.array(attack_img))[0]

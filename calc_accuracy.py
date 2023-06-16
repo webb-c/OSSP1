@@ -19,11 +19,12 @@ import helper
 import detectors.denoising_detector as denoising
 import detectors.pca_detector as pca
 import detectors.OPA2D_detector as opa2d
-import detectors.binary_detector as binary
+from detectors.binary_detector import ResNetforOSP
 from networks.resnet import ResNet
 
 random.seed(42)
 resnet = ResNet()
+detect = ResNetforOSP()
 
 ### cuda setting
 os.environ["CUDA_VISIBLE_DEVICES"]="0"
