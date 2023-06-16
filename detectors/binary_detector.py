@@ -322,29 +322,33 @@ class ResNetforOSP:
         
         return (x_train, y_train), (x_test, y_test)
     
-# model = ResNet(load_weights=False)
-# model.train()
-
-# testing용 코드
-origin_img = cv2.imread('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/sample/original_8625.png')
-attack_img = cv2.imread('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/sample/attack_8625.png')
+def is_attack(img):
+    conf = model.predict(img)
+    predict = np.argmax(conf)
+    if predict == 0 : return True
+    else : return False
 
 model = ResNetforOSP()
 
-predict_origin = model.predict(np.array(origin_img))[0]
-predict_attack = model.predict(np.array(attack_img))[0]
-predict_origin = ['{:.4f}'.format(num) for num in predict_origin]
-predict_attack = ['{:.4f}'.format(num) for num in predict_attack]
+# testing용 코드
+test_img = cv2.imread('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/resnet_sample/original/1037_automobile.png', cv2.IMREAD_COLOR)
+test_img = cv2.cvtColor(test_img, cv2.COLOR_BGR2RGB)
+print(is_attack(test_img))
 
-fig, axes = plt.subplots(1, 2, figsize=(10, 5))
+# predict_origin = model.predict(np.array(origin_img))[0]
+# predict_attack = model.predict(np.array(attack_img))[0]
+# predict_origin = ['{:.4f}'.format(num) for num in predict_origin]
+# predict_attack = ['{:.4f}'.format(num) for num in predict_attack]
 
-axes[0].imshow(origin_img)
-axes[0].axis('off')
-axes[0].annotate(str(predict_origin), xy=(0.5, 0), xycoords='axes fraction', xytext=(0, -30), textcoords='offset points', fontsize=12, ha='center')
+# fig, axes = plt.subplots(1, 2, figsize=(10, 5))
 
-axes[1].imshow(attack_img)
-axes[1].axis('off')
-axes[1].annotate(str(predict_attack), xy=(0.5, 0), xycoords='axes fraction', xytext=(0, -30), textcoords='offset points', fontsize=12, ha='center')
+# axes[0].imshow(origin_img)
+# axes[0].axis('off')
+# axes[0].annotate(str(predict_origin), xy=(0.5, 0), xycoords='axes fraction', xytext=(0, -30), textcoords='offset points', fontsize=12, ha='center')
 
-plt.tight_layout()
-plt.show()
+# axes[1].imshow(attack_img)
+# axes[1].axis('off')
+# axes[1].annotate(str(predict_attack), xy=(0.5, 0), xycoords='axes fraction', xytext=(0, -30), textcoords='offset points', fontsize=12, ha='center')
+
+# plt.tight_layout()
+# plt.show()
