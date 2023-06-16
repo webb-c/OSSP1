@@ -97,12 +97,12 @@ def reattack(img_id, input_img, input_class, model, target=None, pixel_count=1,
 
 resnet = ResNet()
 # resnet = LeNet()
-origin_img = cv2.imread('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/resnet_sample/original_52074.png')
-attack_img = cv2.imread('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/resnet_sample/attack_52074.png')
+origin_img = cv2.imread('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/resnet_sample/original/1158_deer.png')
+attack_img = cv2.imread('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/resnet_sample/attack/1158_deer.png')
 # parse_result = parse("C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/sample/original_{}.png",)
 origin_copied = copy.deepcopy(origin_img)
 attack_copied = copy.deepcopy(attack_img)
-img_id = 52074 #162 # 8625 # 200 # 53 # 63 # 
+img_id = 1158 #162 # 8625 # 200 # 53 # 63 # 
 origin_sample = np.array(origin_img)
 origin_predicted_probs = resnet.predict(np.array([origin_sample]))[0]
 origin_predicted_class = np.argmax(origin_predicted_probs)
