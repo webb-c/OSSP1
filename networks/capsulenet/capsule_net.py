@@ -7,10 +7,10 @@ from keras.layers import (
     Reshape,
     Dropout
 )
-from keras.layers.merge import add
+from keras.layers import add
 from keras.regularizers import l2
 from keras.models import Model
-from keras.layers.normalization import BatchNormalization
+from keras.layers import BatchNormalization
 import keras.backend as K
 from keras import optimizers
 import numpy as np

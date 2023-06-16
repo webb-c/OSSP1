@@ -2,7 +2,7 @@ import keras
 import numpy as np
 from keras.datasets import cifar10
 from keras.preprocessing.image import ImageDataGenerator
-from keras.layers.normalization import BatchNormalization
+from tensorflow.keras.layers import BatchNormalization
 from keras.layers import Conv2D, Dense, Input, add, Activation, GlobalAveragePooling2D
 from keras.callbacks import LearningRateScheduler, TensorBoard, ModelCheckpoint
 from keras.models import Model, load_model
@@ -14,7 +14,7 @@ from networks.train_plot import PlotLearning
 class ResNet:
     def __init__(self, epochs=200, batch_size=128, load_weights=True):
         self.name               = 'resnet'
-        self.model_filename     = 'networks/models/resnet.h5'
+        self.model_filename     = 'C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/networks/models/resnet.h5'
         
         self.stack_n            = 5    
         self.num_classes        = 10
@@ -24,7 +24,7 @@ class ResNet:
         self.epochs             = epochs
         self.iterations         = 50000 // self.batch_size
         self.weight_decay       = 0.0001
-        self.log_filepath       = r'networks/models/resnet/'
+        self.log_filepath       = r'C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/networks/models/resnet/'
 
         if load_weights:
             try:

@@ -95,7 +95,7 @@ class PixelAttacker:
             helper.plot_image(attack_image, actual_class, self.class_names, predicted_class)
 
         return [model.name, pixel_count, img_id, actual_class, predicted_class, success, cdiff, prior_probs,
-                predicted_probs, attack_result.x]
+                predicted_probs,attack_image,attack_result.x]
 
     def attack_all(self, models, samples=500, pixels=(1, 3, 5), targeted=False,
                    maxiter=75, popsize=400, verbose=False):

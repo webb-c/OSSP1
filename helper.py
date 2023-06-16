@@ -8,7 +8,7 @@ from matplotlib import pyplot as plt
 import pandas as pd
 import requests
 from tqdm import tqdm
-
+from PIL import Image
 
 def perturb_image(xs, img):
     # If this function is passed just one perturbation vector,
@@ -42,24 +42,31 @@ def plot_image(image, label_true=None, class_names=None, label_pred=None):
 
     plt.grid()
     plt.imshow(image.astype(np.uint8))
-
+    
+    
     # Show true and predicted classes
     if label_true is not None and class_names is not None:
         labels_true_name = class_names[label_true]
         if label_pred is None:
             xlabel = "True: " + labels_true_name
+            plt.xticks([])  # Remove ticks from the plot
+            plt.yticks([])
         else:
             # Name of the predicted class
+            plt.xticks([])  # Remove ticks from the plot
+            plt.yticks([])
+            #plt.savefig('./saved_image_'+labels_true_name+'.png',format='png', bbox_inches='tight')
+            img_2 = Image.fromarray(image.astype(np.uint8))
+            img_2.save('./saved_image_'+labels_true_name+'.png','png')
+            
             labels_pred_name = class_names[label_pred]
-
+            
             xlabel = "True: " + labels_true_name + "\nPredicted: " + labels_pred_name
 
         # Show the class on the x-axis
         plt.xlabel(xlabel)
-
-    plt.xticks([])  # Remove ticks from the plot
-    plt.yticks([])
     plt.show()  # Show the plot
+
 
 
 def plot_images(images, labels_true, class_names, labels_pred=None,
@@ -156,7 +163,7 @@ def visualize_attack(df, class_names):
                 labels_true=labels_true,
                 class_names=class_names,
                 labels_pred=labels_pred,
-                titles=titles)
+                titles=titles) 
 
 
 def attack_stats(df, models, network_stats):

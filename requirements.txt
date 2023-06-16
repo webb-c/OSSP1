@@ -1,6 +1,7 @@
 jupyter
 keras
-tensorflow-gpu
+tensorflow==2.10.0
+tensorflow-gpu==2.10.0
 pandas
 numpy
 matplotlib
