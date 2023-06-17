@@ -49,7 +49,7 @@ def calculate_difference(origin, decoded) :
     abs_diff = np.abs(diff)
     return abs_diff
 
-def is_attack(image, threshold=0.7) :   # threshold 값만 나중에 잘 정해보기
+def is_attack(image, threshold=0.000095) :   # threshold 값만 나중에 잘 정해보기
     value = get_value(image)
     if value > threshold : 
         return True

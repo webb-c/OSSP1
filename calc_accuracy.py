@@ -44,12 +44,21 @@ def get_performance(detect_method=binary) :
     x_test, y_test = get_data()
     # print(y_test[:15]) # [0, 1, 2, 3, 4 ,... , 9]
     # length = len(x_test)
+    
+    accuracy_List = []
+    data_List = []
+    total_time_List = []
+    
     for i in tqdm(range(100)) :
         x = x_test[i]
         y = y_test[i][0]
         # origin
         start_time = time.time()
-        ret = detect_method.is_attack(x)
+        # ret = detect_method.is_attack(x)
+        ret_0 = denoising.is_attack(x)
+        ret_1 = pca.is_attack(x)
+        ret_2 = binary.is_attack(x)
+        ret_3 = opa2d.is_attack(x)
         end_time = time.time()
         total_time += (end_time - start_time)
         pred = np.argmax(resnet.predict(x)[0])
@@ -58,9 +67,9 @@ def get_performance(detect_method=binary) :
             if pred == y : correct += 1
         # attack
         copy_x = copy.deepcopy(x)
-        attack_x = opa2d.reattack(copy_x, pred, resnet, maxiter=50, verbose=False)[-2]
+        attack_x = opa2d.reattack(copy_x, pred, resnet, maxiter=30, verbose=False)[-2]
         start_time = time.time()
-        attack_ret = detect_method.is_attack(attack_x)
+        # attack_ret = detect_method.is_attack(attack_x)
         end_time = time.time()
         total_time += (end_time - start_time)
         if not attack_ret :
@@ -73,20 +82,21 @@ def get_performance(detect_method=binary) :
 
 ### test
 data, accuracy, total_time = get_performance()
+
 print("==== Accuracy ====")
-#print("Denosing : " + str(accuracy))
-#print("Pca      : " + str(accuracy))
-print("Binary   : " + str(accuracy))
-#print("OPA2D    : " + str(accuracy))
+print("Denosing : " + str(accuracy[0]))
+print("Pca      : " + str(accuracy[1]))
+print("Binary   : " + str(accuracy[2]))
+print("OPA2D    : " + str(accuracy[3]))
 
 print("==== # of data ====")
-#print("Denosing : " + str(data))
-#print("Pca      : " + str(data))
-print("Binary   : " + str(data))
-#print("OPA2D    : " + str(data))
+print("Denosing : " + str(data[0]))
+print("Pca      : " + str(data[1]))
+print("Binary   : " + str(data[2]))
+print("OPA2D    : " + str(data[3]))
 
 print("==== total time for decide attack or not ====")
-#print("Denosing : " + str(total_time))
-#print("Pca      : " + str(total_time))
-print("Binary   : " + str(total_time))
-#print("OPA2D    : " + str(total_time))
+print("Denosing : " + str(total_time[0]))
+print("Pca      : " + str(total_time[1]))
+print("Binary   : " + str(total_time[2]))
+print("OPA2D    : " + str(total_time[3]))

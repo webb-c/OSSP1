@@ -30,7 +30,7 @@ def __calculate_difference(origin, denoising) :
     abs_diff = np.abs(diff)
     return abs_diff
 
-def is_attack(image, threshold = 0.5) :
+def is_attack(image, threshold=0.00014) :
     return get_value(image) > threshold
     
 def get_value(image) :

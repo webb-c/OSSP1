@@ -55,7 +55,7 @@ def color_distance(color1, color2) : # rgb값을 인자로 받아옴 -> color = 
     return dist   
 
 def reattack(input_img, input_class, model, target=None, pixel_count=1,
-               maxiter=75, popsize=400, verbose=False, plot=False):
+               maxiter=30, popsize=400, verbose=False, plot=False):
         # Change the target class based on whether this is a targeted attack or not
         targeted_attack = target is not None
         # target_class = target if targeted_attack else self.y_test[img_id, 0]
