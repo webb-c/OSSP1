@@ -36,18 +36,12 @@ def pca_encode_decode(origin):
     return decoded
 
 def calculate_difference(origin, decoded) :
-    # confidence_original = resnet.predict(origin)[0]
-    # confidence_pca = resnet.predict(decoded)[0]
-    # diff = confidence_original - confidence_pca
-    # abs_diff = np.abs(diff)
-    # diff_sum = np.sum(abs_diff)/2
-    
     confidence_original = resnet.predict(origin)[0]
-    confidence_denoising = resnet.predict(decoded)[0]
-    idx = np.argmax(confidence_original)
-    diff = confidence_original[idx] - confidence_denoising[idx]
+    confidence_pca = resnet.predict(decoded)[0]
+    diff = confidence_original - confidence_pca
     abs_diff = np.abs(diff)
-    return abs_diff
+    diff_sum = np.sum(abs_diff)/2
+    return diff_sum
 
 def is_attack(image, threshold=0.000095) :   # threshold 값만 나중에 잘 정해보기
     value = get_value(image)

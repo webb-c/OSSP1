@@ -43,45 +43,57 @@ def get_performance(detect_method=binary) :
     total_time = 0
     x_test, y_test = get_data()
     # print(y_test[:15]) # [0, 1, 2, 3, 4 ,... , 9]
-    # length = len(x_test)
     
-    accuracy_List = []
-    data_List = []
-    total_time_List = []
+    data = [0, 0, 0, 0]
+    correct = [0, 0, 0, 0]
+    total_time = [0, 0, 0, 0]
+    detect_model = [denoising, pca, binary, opa2d]
     
-    for i in tqdm(range(100)) :
+    for i in tqdm(range(2500)) :
         x = x_test[i]
         y = y_test[i][0]
+        
         # origin
-        start_time = time.time()
-        # ret = detect_method.is_attack(x)
-        ret_0 = denoising.is_attack(x)
-        ret_1 = pca.is_attack(x)
-        ret_2 = binary.is_attack(x)
-        ret_3 = opa2d.is_attack(x)
-        end_time = time.time()
-        total_time += (end_time - start_time)
         pred = np.argmax(resnet.predict(x)[0])
-        if not ret :
-            data += 1
-            if pred == y : correct += 1
+        
         # attack
         copy_x = copy.deepcopy(x)
         attack_x = opa2d.reattack(copy_x, pred, resnet, maxiter=30, verbose=False)[-2]
-        start_time = time.time()
-        # attack_ret = detect_method.is_attack(attack_x)
-        end_time = time.time()
-        total_time += (end_time - start_time)
-        if not attack_ret :
-            data += 1
-            attack_pred = np.argmax(resnet.predict(x)[0])
-            if attack_pred == y : correct += 1
+        
+        # detect
+        for i in range(4) :
+            detect = detect_model[i]
+            
+            start_time = time.time()
+            ret = detect.is_attack(x)
+            end_time = time.time()
+            total_time[i] += (end_time - start_time)
+            if not ret :
+                data[i] += 1
+                if pred == y : correct[i] += 1
+        
+            start_time = time.time()
+            attack_ret = detect.is_attack(attack_x)
+            end_time = time.time()
+            total_time[i] += (end_time - start_time)  
+            if not attack_ret :
+                data[i] += 1
+                attack_pred = np.argmax(resnet.predict(attack_x)[0])
+                if attack_pred == y : correct[i] += 1
     
-    accuracy = 100*(correct / data)
+    accuracy = []
+    for i in range(4) :
+        if data[i] == 0 :
+            accuracy.append("NaN")
+        else : accuracy.append(100*(correct[i] / data[i]))
     return (data, accuracy, total_time)
 
 ### test
+start_time = time.time()
 data, accuracy, total_time = get_performance()
+end_time = time.time()
+
+print("total running time :", end_time - start_time)
 
 print("==== Accuracy ====")
 print("Denosing : " + str(accuracy[0]))

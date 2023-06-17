@@ -100,8 +100,9 @@ def reattack(input_img, input_class, model, target=None, pixel_count=1,
         #         predicted_probs,attack_image,attack_result.x]
 # img , model load
 
-def is_attack(value, threshold=200) :   # threshold 값만 나중에 잘 정해보기
-    if value > threshold : 
+def is_attack(image, threshold=0.891) :   # threshold 값만 나중에 잘 정해보기
+    value = get_distance(image)
+    if value < threshold : 
         return True
     else : return False
 
