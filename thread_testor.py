@@ -18,6 +18,8 @@ origin_image_folder = "C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras
 attack_image_list = [f for f in os.listdir(attack_image_folder) if f.endswith('.png')]
 origin_image_list = [f for f in os.listdir(origin_image_folder) if f.endswith('.png')]
 
+origin_OPA2D_value = 0
+attack_OPA2D_value = 0
 result_list = []
 for index in tqdm(range(len(attack_image_list))):
     

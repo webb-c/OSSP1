@@ -16,13 +16,19 @@ def __denoising(origin):
     return cv2.medianBlur(src = origin, ksize = kernal_size)
 
 def __calculate_difference(origin, denoising) :
+    # confidence_original = resnet.predict(origin)[0]
+    # confidence_denoising = resnet.predict(denoising)[0]
+
+    # diff = confidence_original - confidence_denoising
+    # abs_diff = np.abs(diff)
+    # diff_sum = np.sum(abs_diff)/2
+    
     confidence_original = resnet.predict(origin)[0]
     confidence_denoising = resnet.predict(denoising)[0]
-
-    diff = confidence_original - confidence_denoising
+    idx = np.argmax(confidence_original)
+    diff = confidence_original[idx] - confidence_denoising[idx]
     abs_diff = np.abs(diff)
-    diff_sum = np.sum(abs_diff)/2
-    return diff_sum
+    return abs_diff
 
 def is_attack(image, threshold = 0.5) :
     return get_value(image) > threshold
