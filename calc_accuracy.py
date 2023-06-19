@@ -19,17 +19,17 @@ import detectors
 import networks
 import helper
 
-import detectors.denoising_detector as denoising
-import detectors.pca_detector as pca
+# import detectors.denoising_detector as denoising
+# import detectors.pca_detector as pca
 import detectors.OPA2D_detector as opa2d
-from detectors.binary_detector import ResNetforOSP
+# from detectors.binary_detector import ResNetforOSP
 from networks.resnet import ResNet
 
 tf.get_logger().setLevel(tf.compat.v1.logging.ERROR)
 
 random.seed(42)
 resnet = ResNet()
-binary= ResNetforOSP()
+# binary= ResNetforOSP()
 
 ### get data
 def get_data():
@@ -37,30 +37,34 @@ def get_data():
     return (x_test, y_test)
 
 ### performance
-def get_performance(detect_method=binary) :
-    data = 0
-    correct = 0
-    total_time = 0
+def get_performance() :
+    correct = 1602
     x_test, y_test = get_data()
     # print(y_test[:15]) # [0, 1, 2, 3, 4 ,... , 9]
     
-    data = [0, 0, 0, 0]
-    correct = [0, 0, 0, 0]
-    total_time = [0, 0, 0, 0]
-    detect_model = [denoising, pca, binary, opa2d]
+    # data = [810, 907, 1499, 614]
+    # correct = [810, 902, 1402, 614]
+    # total_time = [ 361.7726831436157,  370.7467370033264,  179.8916881084442, 11791.835520982742]
+    # detect_model = [denoising, pca, binary, opa2d]
     
-    for i in tqdm(range(2500)) :
+    length = 2500
+    
+    for i in tqdm(range(1000, length)) :
         x = x_test[i]
         y = y_test[i][0]
         
         # origin
         pred = np.argmax(resnet.predict(x)[0])
+        if pred == y : correct += 1
         
         # attack
         copy_x = copy.deepcopy(x)
         attack_x = opa2d.reattack(copy_x, pred, resnet, maxiter=30, verbose=False)[-2]
+        attack_pred = np.argmax(resnet.predict(attack_x)[0])
+        if attack_pred == y : correct += 1
         
         # detect
+        '''
         for i in range(4) :
             detect = detect_model[i]
             
@@ -80,17 +84,27 @@ def get_performance(detect_method=binary) :
                 data[i] += 1
                 attack_pred = np.argmax(resnet.predict(attack_x)[0])
                 if attack_pred == y : correct[i] += 1
-    
+        '''
+        
+        # unmap
+        del x, copy_x, attack_x
+    '''
     accuracy = []
     for i in range(4) :
         if data[i] == 0 :
             accuracy.append("NaN")
         else : accuracy.append(100*(correct[i] / data[i]))
-    return (data, accuracy, total_time)
+    return (data, correct, accuracy, total_time)
+    '''
+    accuracy = 100 * (correct/(length*2))
+    return accuracy, correct
 
 ### test
+accuracy, correct = get_performance()
+print("pure Resnet Accuracy with attack : " + str(accuracy)+"\t# of correct :"+str(correct))
+'''
 start_time = time.time()
-data, accuracy, total_time = get_performance()
+data, correct, accuracy, total_time = get_performance()
 end_time = time.time()
 
 print("total running time :", end_time - start_time)
@@ -100,6 +114,12 @@ print("Denosing : " + str(accuracy[0]))
 print("Pca      : " + str(accuracy[1]))
 print("Binary   : " + str(accuracy[2]))
 print("OPA2D    : " + str(accuracy[3]))
+
+print("==== # of correct ====")
+print("Denosing : " + str(correct[0]))
+print("Pca      : " + str(correct[1]))
+print("Binary   : " + str(correct[2]))
+print("OPA2D    : " + str(correct[3]))
 
 print("==== # of data ====")
 print("Denosing : " + str(data[0]))
@@ -112,3 +132,4 @@ print("Denosing : " + str(total_time[0]))
 print("Pca      : " + str(total_time[1]))
 print("Binary   : " + str(total_time[2]))
 print("OPA2D    : " + str(total_time[3]))
+'''
