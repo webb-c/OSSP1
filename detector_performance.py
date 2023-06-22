@@ -1,17 +1,20 @@
-import cv2
+# Standard library imports
 import os
 import random
-from tqdm import tqdm
-import sys
-sys.path.append('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras')
 
-from detectors.binary_detector import ResNetforOSP
+# Third party imports
+import cv2
+from tqdm import tqdm
+
+# Local application imports
 import detectors.denoising_detector as denosing
 import detectors.pca_detector as pca
 import detectors.OPA2D_detector as opa2d
+from detectors.binary_detector import ResNetforOSP
 
 random.seed(42)
 binary = ResNetforOSP()
+count_per_class = 10
 
 def __do_attack_detect(idx, image):
     global denosing_detect_success_number, pca_detect_success_number, binary_detect_success_number, opa2d_detect_success_number
@@ -43,8 +46,8 @@ def __load_image_file_name_list():
     global attack_image_folder, original_image_folder, attack_file_name_list, original_file_name_list, total_image_number, tmp_attack_file, tmp_original_file, data_class
     attack_file_name_list = [[] for _ in range(10)]
     original_file_name_list = [[] for _ in range(10)]
-    attack_image_folder = "C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/resnet_sample/attack"
-    original_image_folder = "C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/resnet_sample/original"
+    attack_image_folder = "./resnet_sample/attack"
+    original_image_folder = "./resnet_sample/original"
     data_class = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
     
     tmp_attack_file = [f for f in os.listdir(attack_image_folder) if f.endswith('.png')]
@@ -59,10 +62,10 @@ def __load_image_file_name_list():
             if file.split('_')[1] == class_name + '.png' :
                 attack_file_name_list[i].append(file)
                 count += 1
-            if count == 10:
+            if count == count_per_class:
                 break
-        if count < 10:
-            print("error : test image number is more than attack image number !!")
+        if count < count_per_class:
+            print("error : test image number is more than count_per_class !!")
             exit()
 
     for i, class_name in enumerate(data_class) :
@@ -71,10 +74,10 @@ def __load_image_file_name_list():
             if file.split('_')[1] == class_name + '.png' :
                 original_file_name_list[i].append(file)
                 count += 1
-            if count == 10:
+            if count == count_per_class:
                 break
-        if count < 10:
-            print("error : test image number is more than original image number !!")
+        if count < count_per_class:
+            print("error : test image number is more than count_per_class !!")
             exit()
 
 
@@ -113,7 +116,7 @@ def __print_result():
 
 if __name__ == "__main__":
     global total_image_number
-    total_image_number = [10] * 10
+    total_image_number = [count_per_class] * 10
     __init_variable()
     __load_image_file_name_list()
     

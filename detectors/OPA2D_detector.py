@@ -1,18 +1,18 @@
-'''
-OPA2D-detector
-'''
+# Standard library imports
+import copy
 
+# Third party imports
 import cv2
 import numpy as np
 from keras.datasets import cifar10
-import sys
 import tensorflow as tf
-import copy
-sys.path.append('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras')
-import helper
-from networks.resnet import ResNet
-from networks.lenet import LeNet
-from differential_evolution import differential_evolution
+
+# Local application imports
+from .utility import helper
+from .networks.resnet import ResNet
+from .networks.lenet import LeNet
+from .OPA2D.differential_evolution import differential_evolution
+
 resnet = ResNet()
 
 tf.get_logger().setLevel(tf.compat.v1.logging.ERROR)
@@ -54,8 +54,7 @@ def color_distance(color1, color2) : # rgb값을 인자로 받아옴 -> color = 
     dist = max(abs(r1-r2), abs(g1-g2), abs(b1-b2))
     return dist   
 
-def reattack(input_img, input_class, model, target=None, pixel_count=1,
-               maxiter=30, popsize=400, verbose=False, plot=False):
+def reattack(input_img, input_class, model, target=None, pixel_count=1, maxiter=30, popsize=400, verbose=False, plot=False):
         # Change the target class based on whether this is a targeted attack or not
         targeted_attack = target is not None
         # target_class = target if targeted_attack else self.y_test[img_id, 0]
@@ -131,6 +130,7 @@ def get_distance(origin_img) :
 
     return origin_dist/255
 
+''' Test 
 # origin_img = cv2.imread('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/resnet_sample/original/1158_deer.png',cv2.IMREAD_COLOR)
 origin_img = cv2.imread('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/resnet_sample/attack/19_frog.png',cv2.IMREAD_COLOR)
 origin_img = cv2.cvtColor(origin_img, cv2.COLOR_BGR2RGB)
@@ -150,6 +150,7 @@ origin_rgb = origin_sample[int(x_pos)][int(y_pos)]
 reattack_origin_rgb = reattacked_origin_result[-2][int(x_pos),int(y_pos)]
 origin_dist = color_distance(origin_rgb,reattack_origin_rgb)
 print(origin_dist)
+'''
 
 # def get_distance(origin_img) : 
     

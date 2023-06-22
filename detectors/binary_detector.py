@@ -1,15 +1,13 @@
+# Standard library imports
+import os
+import random
+
+# Third party imports
+import cv2
 import tensorflow as tf
 import keras
-import sys
-import pathlib
 import matplotlib.pyplot as plt
-sys.path.append('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras')
-
-import os
 import numpy as np
-import random
-import cv2
-from PIL import Image
 from keras.datasets import cifar10
 from tensorflow.keras.preprocessing import image
 from keras.preprocessing.image import ImageDataGenerator
@@ -18,15 +16,17 @@ from keras.layers import Conv2D, Dense, Input, add, Activation, GlobalAveragePoo
 from keras.callbacks import LearningRateScheduler, TensorBoard, ModelCheckpoint
 from keras.models import Model, load_model
 from keras import optimizers, regularizers
+from PIL import Image
 
-from networks.train_plot import PlotLearning
+# Local application imports
+from .networks.train_plot import PlotLearning
 
 random.seed(42)
 
 class ResNetforOSP:
     def __init__(self, epochs=200, batch_size=128, load_weights=True):
         self.name               = 'resnet'
-        self.model_filename     = 'C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/detectors/binary/model_test.h5'
+        self.model_filename     = './detectors/binary/model_test.h5'
         
         self.stack_n            = 2  
         self.num_classes        = 2
@@ -36,7 +36,7 @@ class ResNetforOSP:
         self.epochs             = epochs
         self.iterations         = 18000 // self.batch_size
         self.weight_decay       = 0.0001
-        self.log_filepath       = 'C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/detectors/binary/log'
+        self.log_filepath       = './detectors/binary/log'
 
         if load_weights:
             try:
@@ -83,9 +83,6 @@ class ResNetforOSP:
             block = add([intput,conv_2])
             return block
 
-        '''
-        아래 주석 수정해줘야함!!
-        '''
         # build model
         # total layers = stack_n * 3 * 2 + 2
         # stack_n = 3 by default, total layers = 32
@@ -175,6 +172,7 @@ class ResNetforOSP:
         checkpoint = ModelCheckpoint(self.model_filename, 
                 monitor='val_loss', verbose=0, save_best_only= True, mode='auto')
         # plot_callback = PlotLearning()
+    
         cbks = [change_lr,tb_cb,checkpoint]
 
         # set data augmentation
@@ -223,7 +221,7 @@ class ResNetforOSP:
         return self._model.evaluate(x_test, y_test, verbose=1)[1]
     
     def get_dataset(self):
-        attack_path = "C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/lenet_sample/attack"
+        attack_path = "./lenet_sample/attack"
         attack_fileList = [f for f in os.listdir(attack_path) if f.endswith('.png')]
         attack_fileList_1 = attack_fileList[:len(attack_fileList)//2]
         attack_fileList_2 = attack_fileList[len(attack_fileList)//2:]
@@ -239,7 +237,7 @@ class ResNetforOSP:
             temp.close()
         attack_label = np.zeros(shape=(len(attack_fileList),), dtype=np.int8)
         
-        origin_path = "C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/lenet_sample/original"
+        origin_path = "./lenet_sample/original"
         origin_fileList = [f for f in os.listdir(origin_path) if f.endswith('.png')]
         origin_fileList_1 = origin_fileList[:len(origin_fileList)//2]
         origin_fileList_2 = origin_fileList[len(origin_fileList)//2:]
@@ -273,7 +271,7 @@ class ResNetforOSP:
     def get_dataset_usetf(self): 
         # cifar랑 비교
         
-        dir_path = "C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/lenet_sample/"
+        dir_path = "./lenet_sample/"
         # img_gen = ImageDataGenerator(validation_split=0.2)
         
         #train_set = img_gen.flow_from_directory(directory=dir_path, target_size=(self.img_rows, self.img_cols), class_mode='binary', subset='training', batch_size=self.batch_size)

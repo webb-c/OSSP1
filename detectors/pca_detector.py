@@ -1,19 +1,15 @@
-'''
-PCA detector
-'''
-import keras
-import cv2
+# Third party imports
 import numpy as np
+import joblib
 from sklearn.decomposition import PCA
 from keras.datasets import cifar10
-import sys
-sys.path.append('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras')
-import helper
-import joblib
-from networks.resnet import ResNet
+
+# Local application imports
+from .utility import helper
+from .networks.resnet import ResNet
 
 resnet = ResNet()
-pca = joblib.load('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/detectors/pca/pca_model.pkl')
+pca = joblib.load('./detectors/pca/pca_model.pkl')
 
 def pca_train() :
     (x_train, _), _ = cifar10.load_data()
@@ -21,7 +17,7 @@ def pca_train() :
     pca = PCA(n_components=768)
     pca.fit(x_train_vector)
     
-    joblib.dump(pca, 'C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras/detectors/pca/pca_model.pkl')
+    joblib.dump(pca, './detectors/pca/pca_model.pkl')
 
 def pca_encode_decode(origin):
     origin_vector = origin.reshape(1, -1)
@@ -43,11 +39,9 @@ def calculate_difference(origin, decoded) :
     diff_sum = np.sum(abs_diff)/2
     return diff_sum
 
-def is_attack(image, threshold=0.000095) :   # threshold 값만 나중에 잘 정해보기
+def is_attack(image, threshold = 0.000095) :   # threshold 값만 나중에 잘 정해보기
     value = get_value(image)
-    if value > threshold : 
-        return True
-    else : return False
+    return value > threshold
 
 def get_value(img) :
     image = np.array(img)

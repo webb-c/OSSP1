@@ -1,29 +1,27 @@
-import cv2
 import os
 import random
-import sys
+import copy
+import time
+import datetime
+
+# Third party imports
+import cv2
 import pandas as pd
-from tqdm import tqdm
 import matplotlib
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
 import pandas as pd
-import copy
-import time
-import datetime
 from keras.datasets import cifar10
+from tqdm import tqdm
 
-sys.path.append('C:/Users/CoIn240/VSCpython/2023OSP/one-pixel-attack-keras')
-import detectors
-import networks
-import helper
-
-# import detectors.denoising_detector as denoising
-# import detectors.pca_detector as pca
+# Local application imports
+import detectors.denoising_detector as denosing
+import detectors.pca_detector as pca
 import detectors.OPA2D_detector as opa2d
-# from detectors.binary_detector import ResNetforOSP
-from networks.resnet import ResNet
+from detectors.binary_detector import ResNetforOSP
+from detectors.networks.resnet import ResNet
+
 
 tf.get_logger().setLevel(tf.compat.v1.logging.ERROR)
 
