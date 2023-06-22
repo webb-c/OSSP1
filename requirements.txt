@@ -1,0 +1,10 @@
+jupyter
+keras
+tensorflow==2.10.0
+tensorflow-gpu==2.10.0
+pandas
+numpy
+matplotlib
+scipy
+tqdm
+requests

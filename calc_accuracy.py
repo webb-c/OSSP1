@@ -1,3 +1,4 @@
+# Standard library imports
 import os
 import random
 import copy
@@ -20,7 +21,7 @@ import detectors.denoising_detector as denosing
 import detectors.pca_detector as pca
 import detectors.OPA2D_detector as opa2d
 from detectors.binary_detector import ResNetforOSP
-from detectors.networks.resnet import ResNet
+from networks.resnet import ResNet
 
 
 tf.get_logger().setLevel(tf.compat.v1.logging.ERROR)

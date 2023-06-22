@@ -1,6 +1,7 @@
 # Standard library imports
-import os
 import random
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 # Third party imports
 import cv2
@@ -19,14 +20,15 @@ from keras import optimizers, regularizers
 from PIL import Image
 
 # Local application imports
-from .networks.train_plot import PlotLearning
+from utills.train_plot import PlotLearning
 
 random.seed(42)
+path = os.path.dirname(os.path.abspath(__file__))
 
 class ResNetforOSP:
     def __init__(self, epochs=200, batch_size=128, load_weights=True):
         self.name               = 'resnet'
-        self.model_filename     = './detectors/binary/model_test.h5'
+        self.model_filename     = os.path.join(path, 'models/model_test.h5')
         
         self.stack_n            = 2  
         self.num_classes        = 2
@@ -36,7 +38,7 @@ class ResNetforOSP:
         self.epochs             = epochs
         self.iterations         = 18000 // self.batch_size
         self.weight_decay       = 0.0001
-        self.log_filepath       = './detectors/binary/log'
+        self.log_filepath       = os.path.join(path, 'models/binary_log')
 
         if load_weights:
             try:

@@ -12,9 +12,12 @@ import detectors.pca_detector as pca
 import detectors.OPA2D_detector as opa2d
 from detectors.binary_detector import ResNetforOSP
 
+count_per_class = 10
 random.seed(42)
 binary = ResNetforOSP()
-count_per_class = 10
+path = os.path.dirname(os.path.abspath(__file__))
+attack_image_folder =  os.path.join(path, 'images/resnet_sample/attack')
+original_image_folder = os.path.join(path, 'images/resnet_sample/original')
 
 def __do_attack_detect(idx, image):
     global denosing_detect_success_number, pca_detect_success_number, binary_detect_success_number, opa2d_detect_success_number
@@ -46,8 +49,7 @@ def __load_image_file_name_list():
     global attack_image_folder, original_image_folder, attack_file_name_list, original_file_name_list, total_image_number, tmp_attack_file, tmp_original_file, data_class
     attack_file_name_list = [[] for _ in range(10)]
     original_file_name_list = [[] for _ in range(10)]
-    attack_image_folder = "./resnet_sample/attack"
-    original_image_folder = "./resnet_sample/original"
+    
     data_class = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
     
     tmp_attack_file = [f for f in os.listdir(attack_image_folder) if f.endswith('.png')]

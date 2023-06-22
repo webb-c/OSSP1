@@ -1,3 +1,7 @@
+# Standard library imports
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+
 # Third party imports
 import numpy as np
 import joblib
@@ -5,11 +9,12 @@ from sklearn.decomposition import PCA
 from keras.datasets import cifar10
 
 # Local application imports
-from .utility import helper
-from .networks.resnet import ResNet
+from networks.resnet import ResNet
+from utills import helper
 
 resnet = ResNet()
-pca = joblib.load('./detectors/pca/pca_model.pkl')
+path = os.path.dirname(os.path.abspath(__file__))
+pca = joblib.load(os.path.join(path, 'models/pca_model.pkl'))
 
 def pca_train() :
     (x_train, _), _ = cifar10.load_data()
@@ -17,7 +22,7 @@ def pca_train() :
     pca = PCA(n_components=768)
     pca.fit(x_train_vector)
     
-    joblib.dump(pca, './detectors/pca/pca_model.pkl')
+    joblib.dump(os.path.join(path, 'models/pca_model.pkl'))
 
 def pca_encode_decode(origin):
     origin_vector = origin.reshape(1, -1)

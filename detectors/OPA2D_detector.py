@@ -1,17 +1,19 @@
 # Standard library imports
 import copy
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 # Third party imports
 import cv2
 import numpy as np
-from keras.datasets import cifar10
 import tensorflow as tf
+from keras.datasets import cifar10
 
 # Local application imports
-from .utility import helper
-from .networks.resnet import ResNet
-from .networks.lenet import LeNet
-from .OPA2D.differential_evolution import differential_evolution
+from networks.resnet import ResNet
+from networks.lenet import LeNet
+from utills import helper
+from utills.differential_evolution import differential_evolution
 
 resnet = ResNet()
 

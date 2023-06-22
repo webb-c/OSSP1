@@ -1,9 +1,13 @@
+# Standard library imports
+import sys, os
+sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+
 # Third party imports
 import cv2
 import numpy as np
 
 # Local application imports
-from .networks.resnet import ResNet
+from networks.resnet import ResNet
 
 resnet = ResNet()
 
