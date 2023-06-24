@@ -37,33 +37,19 @@ def get_data():
 
 ### performance
 def get_performance() :
-    correct = 1602
-    x_test, y_test = get_data()
-    # print(y_test[:15]) # [0, 1, 2, 3, 4 ,... , 9]
     
-    # data = [810, 907, 1499, 614]
-    # correct = [810, 902, 1402, 614]
-    # total_time = [ 361.7726831436157,  370.7467370033264,  179.8916881084442, 11791.835520982742]
-    # detect_model = [denoising, pca, binary, opa2d]
+    x_test, y_test = get_data()
+    
+    data = [0, 0, 0, 0]
+    correct = [0, 0, 0, 0]
+    total_time = [ 0, 0, 0, 0]
+    detect_model = [denoising, pca, binary, opa2d]
     
     length = 2500
-    
-    for i in tqdm(range(1000, length)) :
+    for i in tqdm(range(length)) :
         x = x_test[i]
         y = y_test[i][0]
         
-        # origin
-        pred = np.argmax(resnet.predict(x)[0])
-        if pred == y : correct += 1
-        
-        # attack
-        copy_x = copy.deepcopy(x)
-        attack_x = opa2d.reattack(copy_x, pred, resnet, maxiter=30, verbose=False)[-2]
-        attack_pred = np.argmax(resnet.predict(attack_x)[0])
-        if attack_pred == y : correct += 1
-        
-        # detect
-        '''
         for i in range(4) :
             detect = detect_model[i]
             
@@ -71,6 +57,8 @@ def get_performance() :
             ret = detect.is_attack(x)
             end_time = time.time()
             total_time[i] += (end_time - start_time)
+            pred = np.argmax(resnet.predict(x)[0])
+            
             if not ret :
                 data[i] += 1
                 if pred == y : correct[i] += 1
@@ -83,25 +71,15 @@ def get_performance() :
                 data[i] += 1
                 attack_pred = np.argmax(resnet.predict(attack_x)[0])
                 if attack_pred == y : correct[i] += 1
-        '''
-        
-        # unmap
-        del x, copy_x, attack_x
-    '''
-    accuracy = []
-    for i in range(4) :
-        if data[i] == 0 :
-            accuracy.append("NaN")
-        else : accuracy.append(100*(correct[i] / data[i]))
+    
+        accuracy = []
+        for i in range(4) :
+            if data[i] == 0 : accuracy.append("NaN")
+            else : accuracy.append(100*(correct[i] / data[i]))
+            
     return (data, correct, accuracy, total_time)
-    '''
-    accuracy = 100 * (correct/(length*2))
-    return accuracy, correct
 
 ### test
-accuracy, correct = get_performance()
-print("pure Resnet Accuracy with attack : " + str(accuracy)+"\t# of correct :"+str(correct))
-'''
 start_time = time.time()
 data, correct, accuracy, total_time = get_performance()
 end_time = time.time()
@@ -131,4 +109,3 @@ print("Denosing : " + str(total_time[0]))
 print("Pca      : " + str(total_time[1]))
 print("Binary   : " + str(total_time[2]))
 print("OPA2D    : " + str(total_time[3]))
-'''
