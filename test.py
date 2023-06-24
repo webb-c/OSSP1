@@ -6,7 +6,7 @@ Example of Usage :
     $ python accuracy.py --detector binary --model resnet --num 2500
     $ python accuracy.py -d pca -m lenet -n 500
 
-Model Can use :         resnet, lenet
+Model Can use :         resnet, lenet, capsnet, densenet, pure_cnn, vgg16, wide_resnet
 Detector Can use :     denoising, pca, binary, opa2d
 Datasets:               https://www.cs.toronto.edu/~kriz/cifar.html 
 """
