@@ -3,8 +3,8 @@ Testing DNN model' Accuracy on a CIFAR-10 dataset.
 with one-pixel attack and detect by detect model (4-method)
 
 Example of Usage :
-    $ python accuracy.py --detector binary --model resnet --num 2500
-    $ python accuracy.py -d pca -m lenet -n 500
+    $ python test.py --detector binary --model resnet --num 2500
+    $ python test.py -d pca -m lenet -n 500
 
 Model Can use :         resnet, lenet, capsnet, densenet, pure_cnn, vgg16, wide_resnet
 Detector Can use :     denoising, pca, binary, opa2d
